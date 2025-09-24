@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VP OIL STORE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+    }
+    header {
+      background: #2e7d32;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    nav {
+      background: #1b5e20;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .hero {
+      background: url("https://images.unsplash.com/photo-1505576399279-565b52d4ac51?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+    .hero h1 {
+      font-size: 3em;
+      margin: 0;
+      text-shadow: 2px 2px 5px black;
+    }
+    .hero p {
+      font-size: 1.2em;
+      margin: 10px 0;
+      text-shadow: 1px 1px 3px black;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    .product-card img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+    .product-card h3 {
+      margin: 10px 0;
+    }
+    .product-card p {
+      color: #555;
+    }
+    .product-card button {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .product-card button:hover {
+      background: #1b5e20;
+    }
+    footer {
+      background: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    /* --- Cart Modal CSS --- */
+    .cart-modal {
+      display: none;
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .cart-content {
+      background: #fff;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      padding: 20px;
+      max-height: 80%;
+      overflow-y: auto;
+      position: relative;
+    }
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .cart-header h3 {
+      margin:0;
+    }
+    .close-cart {
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .cart-item {
+      display: flex;
+      gap:10px;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom:5px;
+    }
+    .cart-item img {
+      width: 60px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .cart-item-info {
+      flex:1;
+    }
+    .qty-controls {
+      display:flex;
+      align-items:center;
+      gap:5px;
+      margin-top:5px;
+    }
+    .qty-controls button {
+      padding:4px 8px;
+      border:none;
+      background:#2e7d32;
+      color:white;
+      border-radius:5px;
+      cursor:pointer;
+    }
+    .checkout-btn {
+      width:100%;
+      padding:10px;
+      background:#2e7d32;
+      color:white;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+      margin-top:10px;
+      font-weight:bold;
+    }
+    .checkout-btn:hover {
+      background:#1b5e20;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VP OIL STORE</h1>
+    <p>Pure & Healthy Oils for Your Family</p>
+    <button id="openCartBtn" style="margin-top:10px;padding:8px 16px;border:none;background:#fbc02d;color:#000;border-radius:5px;cursor:pointer;">View Cart (<span id="cartCount">0</span>)</button>
+  </header>
+
+  <section class="hero">
+    <h1>Welcome to VP OIL STORE</h1>
+    <p>Buy Cold-Pressed & Organic Oils at Best Price</p>
+  </section>
+
+  <section class="products" id="productsGrid">
+    <!-- JS will populate products -->
+  </section>
+
+  <footer>
+    <p>© 2025 VP OIL STORE | All Rights Reserved</p>
+  </footer>
+
+  <!-- Cart Modal -->
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-content">
+      <div class="cart-header">
+        <h3>Your Cart</h3>
+        <span class="close-cart" id="closeCart">&times;</span>
+      </div>
+      <div id="cartItems"></div>
+      <p style="text-align:right;margin-top:10px;">Subtotal: ₹<span id="subtotal">0</span></p>
+      <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Sample products ---
+    const products = [
+      {id:'p1', name:'Sunflower Oil - 1L', price:150, img:'https://www.jiomart.com/images/product/original/rvbcxzplia/fortune-sunlite-refined-sunflower-oil-1-l-pouch-product-images-orvbcxzplia-p591813723-0-202203151007.jpg'},
+      {id:'p2', name:'Groundnut Oil - 1L', price:200, img:'https://m.media-amazon.com/images/I/71d7f8F1AaL.jpg'},
+      {id:'p3', name:'Coconut Oil - 1L', price:180, img:'https://m.media-amazon.com/images/I/61IsDJBSLPL.jpg'}
+    ];
+
+    let cart = [];
+
+    const productsGrid = document.getElementById('productsGrid');
+    const cartModal = document.getElementById('cartModal');
+    const openCartBtn = document.getElementById('openCartBtn');
+    const closeCart = document.getElementById('closeCart');
+    const cartItemsEl = document.getElementById('cartItems');
+    const subtotalEl = document.getElementById('subtotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const cartCount = document.getElementById('cartCount');
+
+    function renderProducts(){
+      productsGrid.innerHTML = products.map(p => `
+        <div class="product-card">
+          <img src="${p.img}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p>₹${p.price}</p>
+          <button onclick="addToCart('${p.id}')">Add to Cart</button>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(id){
+      const prod = products.find(p=>p.id===id);
+      const found = cart.find(c=>c.id===id);
+      if(found) found.qty +=1;
+      else cart.push({...prod, qty:1});
+      renderCart();
+    }
+
+    function renderCart(){
+      if(cart.length ===0){
+        cartItemsEl.innerHTML = '<p>Your cart is empty.</p>';
+      } else {
+        cartItemsEl.innerHTML = cart.map(item => `
+          <div class="cart-item">
+            <img src="${item.img}" alt="${item.name}">
+            <div class="cart-item-info">
+              <strong>${item.name}</strong><br>₹${item.price} x ${item.qty}
+              <div class="qty-controls">
+                <button onclick="decreaseQty('${item.id}')">-</button>
+                <span>${item.qty}</span>
+                <button onclick="increaseQty('${item.id}')">+</button>
+                <button onclick="removeItem('${item.id}')" style="background:#d32f2f;">Remove</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const subtotal = cart.reduce((sum,item)=>sum+item.price*item.qty,0);
+      subtotalEl.textContent = subtotal;
+      cartCount.textContent = cart.reduce((sum,item)=>sum+item.qty,0);
+    }
+
+    function increaseQty(id){ const item=cart.find(c=>c.id===id); if(item){item.qty++; renderCart();}}
+    function decreaseQty(id){ const item=cart.find(c=>c.id===id); if(item){item.qty--; if(item.qty<=0) removeItem(id); else renderCart();}}
+    function removeItem(id){ cart=cart.filter(c=>c.id!==id); renderCart();}
+
+    openCartBtn.addEventListener('click',()=>{cartModal.style.display='flex';});
+    closeCart.addEventListener('click',()=>{cartModal.style.display='none';});
+    window.addEventListener('click',(e)=>{if(e.target===cartModal) cartModal.style.display='none';});
+
+    checkoutBtn.addEventListener('click',()=>{
+      if(cart.length===0){ alert('Cart empty'); return;}
+      const orderId = 'ORD'+Date.now().toString().slice(-6);
+      alert(`Demo Checkout: Order Placed! Order ID: ${orderId}`);
+      cart = []; renderCart(); cartModal.style.display='none';
+    });
+
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
