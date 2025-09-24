@@ -76,15 +76,18 @@
       <input type="text" id="cname" placeholder="Name">
       <input type="text" id="cphone" placeholder="Phone">
       <textarea id="caddress" placeholder="Address"></textarea>
-      <button id="placeOrder">Place Order</button>
+      <button id="placeOrder">Pay & Place Order</button>
     </div>
   </div>
 </div>
 
+<!-- Razorpay script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script type="module">
-  // --- Firebase Import ---
+  // --- Firebase ---
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, Timestamp, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, Timestamp, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAnX8Wgowd6urw5mjKcjrispl2zN8UXYLI",
@@ -101,15 +104,16 @@
 
   async function saveOrderToFirebase(order){
     try {
-      const docRef = await addDoc(collection(db, "orders"), {
-        ...order,
-        createdAt: Timestamp.now()
-      });
+      const docRef = await addDoc(collection(db,"orders"), {...order, createdAt: Timestamp.now()});
       return docRef.id;
-    } catch(e){
-      console.error("Error adding order: ", e);
-      return null;
-    }
+    } catch(e){ console.error("Error:", e); return null; }
+  }
+
+  async function updateOrderStatus(orderId,status){
+    try{
+      const orderRef = doc(db,"orders",orderId);
+      await updateDoc(orderRef,{status});
+    } catch(e){ console.error("Error updating:", e);}
   }
 
   // --- Products & Cart ---
@@ -118,7 +122,8 @@
       {id:'p2', name:'Groundnut Oil - 1L', price:200, img:'https://t3.ftcdn.net/jpg/01/76/69/72/360_F_176697286_Ru2971MsTRsdLpTgu9yal7aK3NwkEz0V.jpg'},
       {id:'p3', name:'Coconut Oil - 1L', price:180, img:'https://media.istockphoto.com/id/151534987/photo/coconut-oil-bottle-in-front-of-a-brown-coconut.jpg?s=612x612&w=0&k=20&c=50TqbpDR5qweUvgxBojFsh-qo_Ft-xWBSfM-tva2f9c='}
     ];
-  let cart = [];
+  
+  let cart=[];
 
   const productsGrid = document.getElementById('productsGrid');
   const cartModal = document.getElementById('cartModal');
@@ -135,9 +140,8 @@
   const cphone = document.getElementById('cphone');
   const caddress = document.getElementById('caddress');
 
-  // --- Render Products ---
   function renderProducts(){
-    productsGrid.innerHTML = products.map(p => `
+    productsGrid.innerHTML = products.map(p=>`
       <div class="product-card">
         <img src="${p.img}" alt="${p.name}">
         <h3>${p.name}</h3>
@@ -147,7 +151,6 @@
     `).join('');
   }
 
-  // --- Cart Functions ---
   function addToCart(id){
     const prod = products.find(p=>p.id===id);
     const found = cart.find(c=>c.id===id);
@@ -175,9 +178,9 @@
         </div>
       `).join('');
     }
-    const subtotal = cart.reduce((sum,item)=>sum+item.price*item.qty,0);
+    const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
     subtotalEl.textContent=subtotal;
-    cartCount.textContent = cart.reduce((sum,item)=>sum+item.qty,0);
+    cartCount.textContent=cart.reduce((s,i)=>s+i.qty,0);
   }
 
   function increaseQty(id){ const item=cart.find(c=>c.id===id); if(item){item.qty++; renderCart();}}
@@ -188,32 +191,39 @@
   closeCart.addEventListener('click',()=>{cartModal.style.display='none';});
   window.addEventListener('click',(e)=>{if(e.target===cartModal) cartModal.style.display='none';});
 
-  // --- Checkout & Firebase Order ---
-  checkoutBtn.addEventListener('click', ()=>{
-    if(cart.length===0){ alert('Cart empty'); return; }
-    checkoutForm.style.display = checkoutForm.style.display==='block'?'none':'block';
-  });
+  checkoutBtn.addEventListener('click', ()=>{if(cart.length===0){alert('Cart empty'); return;} checkoutForm.style.display=checkoutForm.style.display==='block'?'none':'block';});
 
   placeOrderBtn.addEventListener('click', async ()=>{
     const name=cname.value.trim(), phone=cphone.value.trim(), address=caddress.value.trim();
     if(!name||!phone||!address){ alert('Fill all fields'); return; }
 
-    const orderData = { items: cart, customer:{name,phone,address}, subtotal: cart.reduce((s,i)=>s+i.price*i.qty,0), status:'pending' };
-    const id = await saveOrderToFirebase(orderData);
+    const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
+    const orderData = { items: cart, customer:{name,phone,address}, subtotal, status:'pending' };
+    const orderId = await saveOrderToFirebase(orderData);
+    if(!orderId){ alert('Error saving order'); return; }
 
-    if(id){
-      alert(`Order Placed! Order ID: ${id}`);
-      cart=[]; renderCart(); checkoutForm.style.display='none';
-      cname.value=cphone.value=caddress.value='';
-      cartModal.style.display='none';
-    } else alert('Error saving order.');
+    // Razorpay Payment
+    const options = {
+      key: "YOUR_RAZORPAY_KEY", // Replace with your Razorpay Key
+      amount: subtotal*100,
+      currency: "INR",
+      name: "VP OIL STORE",
+      description: `Order ID: ${orderId}`,
+      handler: async function(response){
+        alert(`Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
+        await updateOrderStatus(orderId,'paid');
+        cart=[]; renderCart(); checkoutForm.style.display='none'; cartModal.style.display='none';
+        cname.value=cphone.value=caddress.value='';
+      },
+      prefill: {name, contact:phone},
+      theme: {color:"#2e7d32"}
+    };
+    const rzp = new Razorpay(options);
+    rzp.open();
   });
 
   renderProducts();
   renderCart();
-
-  // --- Razorpay Payment (Optional Step 4) ---
-  // Add Razorpay script & payment logic here if ready
 </script>
 
 </body>
