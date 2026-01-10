@@ -120,6 +120,13 @@ textarea{resize:none;height:80px}
 
 <input type="text" id="price" placeholder="Total Price (₹)" readonly>
 </div>
+    <div class="info">
+    <p>🧾 Sub Total : <b id="subTotal">₹ 0</b></p>
+    <p>🚚 Delivery Charge : <b id="delivery">₹ 0</b></p>
+    <p>🎉 Discount : <b id="discount">₹ 0</b></p>
+    <hr>
+    <p style="font-size:16px;">💰 Payable Amount : <b id="finalAmount">₹ 0</b></p>
+</div>
    
 <p class="subtitle">Luxury Delivery Address Portal</p>
 
@@ -146,7 +153,7 @@ textarea{resize:none;height:80px}
 </div>
 
 <script>
-// GET PRODUCT NAME
+// GET PRODUCT
 const params = new URLSearchParams(window.location.search);
 const product = params.get("product");
 
@@ -165,11 +172,26 @@ const prices = {
 
 function calculatePrice(){
     const qty = parseFloat(document.getElementById("quantity").value);
+    if(!product || !qty) return;
 
-    if(product && qty){
-        const total = prices[product] * qty;
-        document.getElementById("price").value = "₹ " + total.toFixed(0);
-    }
+    // SUB TOTAL
+    const subTotal = prices[product] * qty;
+
+    // DELIVERY CHARGE
+    let deliveryCharge = subTotal < 500 ? 50 : 0;
+
+    // DISCOUNT
+    let discount = subTotal >= 1000 ? subTotal * 0.10 : 0;
+
+    // FINAL AMOUNT
+    const finalAmount = subTotal + deliveryCharge - discount;
+
+    // DISPLAY
+    document.getElementById("price").value = "₹ " + subTotal.toFixed(0);
+    document.getElementById("subTotal").innerText = "₹ " + subTotal.toFixed(0);
+    document.getElementById("delivery").innerText = "₹ " + deliveryCharge.toFixed(0);
+    document.getElementById("discount").innerText = "- ₹ " + discount.toFixed(0);
+    document.getElementById("finalAmount").innerText = "₹ " + finalAmount.toFixed(0);
 }
 // LIVE LOCATION
 function getLocation(){
@@ -213,6 +235,7 @@ function getPincodeDetails(){
 
 </body>
 </html>
+
 
 
 
