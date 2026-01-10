@@ -118,6 +118,14 @@ textarea{resize:none;height:80px}
 </div>
 
 <script>
+const params = new URLSearchParams(window.location.search);
+const product = params.get("product");
+
+if(product){
+    document.getElementById("productName").innerHTML =
+    "🛒 Product : <b>" + product + "</b>";
+}
+    
 // LIVE LOCATION
 function getLocation(){
     if(navigator.geolocation){
@@ -160,3 +168,4 @@ function getPincodeDetails(){
 
 </body>
 </html>
+
