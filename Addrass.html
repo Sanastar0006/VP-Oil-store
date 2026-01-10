@@ -107,19 +107,19 @@ textarea{resize:none;height:80px}
 </div>
 <div class="row">
     <select id="quantity" onchange="calculatePrice()">
-        <option value="">Select Quantity</option>
-        <option value="0.2">200 gram</option>
-        <option value="0.3">300 grams</option>
-        <option value="0.5">500 grams</option>
-        <option value="1">1Litres</option>
-        <option value="1">1 Litre</option>
-        <option value="2">2 Litres</option>
-        <option value="3">3 Litres</option>
-        <option value="4">4 Litres</option>
-        <option value="5">5 Litres</option>
-    </select>
+<select id="quantity" onchange="calculatePrice()">
+    <option value="">Select Quantity</option>
+    <option value="0.2">200 grams</option>
+    <option value="0.3">300 grams</option>
+    <option value="0.5">500 grams</option>
+    <option value="1">1 Litre</option>
+    <option value="2">2 Litres</option>
+    <option value="3">3 Litres</option>
+    <option value="4">4 Litres</option>
+    <option value="5">5 Litres</option>
+</select>
 
-    <input type="text" id="price" placeholder="Total Price (₹)" readonly>
+<input type="text" id="price" placeholder="Total Price (₹)" readonly>
 </div>
    
 <p class="subtitle">Luxury Delivery Address Portal</p>
@@ -147,7 +147,7 @@ textarea{resize:none;height:80px}
 </div>
 
 <script>
-// GET PRODUCT FROM URL
+// GET PRODUCT NAME
 const params = new URLSearchParams(window.location.search);
 const product = params.get("product");
 
@@ -156,21 +156,22 @@ if(product){
     "🛒 Product : <b>" + product + "</b>";
 }
 
-// PRICE LIST
+// PRICE PER LITRE
 const prices = {
-    "Coconut Oil": {1: 450, 5: 2150},
-    "Sesame Oil": {1: 500, 5: 2400},
-    "Peanut Oil": {1: 420, 5: 2000},
-    "Sunflower Oil": {1: 350, 5: 1650}
+    "Coconut Oil": 450,
+    "Sesame Oil": 500,
+    "Peanut Oil": 420,
+    "Sunflower Oil": 350
 };
 
 function calculatePrice(){
-    const qty = document.getElementById("quantity").value;
+    const qty = parseFloat(document.getElementById("quantity").value);
+
     if(product && qty){
-        document.getElementById("price").value =
-        "₹ " + prices[product][qty];
+        const total = prices[product] * qty;
+        document.getElementById("price").value = "₹ " + total.toFixed(0);
     }
-}  
+}
 // LIVE LOCATION
 function getLocation(){
     if(navigator.geolocation){
@@ -213,6 +214,7 @@ function getPincodeDetails(){
 
 </body>
 </html>
+
 
 
 
