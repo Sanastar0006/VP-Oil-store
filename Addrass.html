@@ -8,6 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+    select{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:14px;
+    margin-bottom:15px;
+    background:white;
+}
 body{
     margin:0;
     font-family:'Poppins',sans-serif;
@@ -96,6 +105,16 @@ textarea{resize:none;height:80px}
     <div class="info" id="productName">
 🛒 Product : <b>Not Selected</b>
 </div>
+<div class="row">
+    <select id="quantity" onchange="calculatePrice()">
+        <option value="">Select Quantity</option>
+        <option value="1">1 Litre</option>
+        <option value="5">5 Litres</option>
+    </select>
+
+    <input type="text" id="price" placeholder="Total Price (₹)" readonly>
+</div>
+   
 <p class="subtitle">Luxury Delivery Address Portal</p>
 
 <button class="btn" onclick="getLocation()">📍 Use Live Location</button>
@@ -121,6 +140,7 @@ textarea{resize:none;height:80px}
 </div>
 
 <script>
+// GET PRODUCT FROM URL
 const params = new URLSearchParams(window.location.search);
 const product = params.get("product");
 
@@ -128,7 +148,22 @@ if(product){
     document.getElementById("productName").innerHTML =
     "🛒 Product : <b>" + product + "</b>";
 }
-    
+
+// PRICE LIST
+const prices = {
+    "Coconut Oil": {1: 450, 5: 2150},
+    "Sesame Oil": {1: 500, 5: 2400},
+    "Peanut Oil": {1: 420, 5: 2000},
+    "Sunflower Oil": {1: 350, 5: 1650}
+};
+
+function calculatePrice(){
+    const qty = document.getElementById("quantity").value;
+    if(product && qty){
+        document.getElementById("price").value =
+        "₹ " + prices[product][qty];
+    }
+}  
 // LIVE LOCATION
 function getLocation(){
     if(navigator.geolocation){
@@ -171,5 +206,6 @@ function getPincodeDetails(){
 
 </body>
 </html>
+
 
 
