@@ -1,230 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VP OIL STORE</title>
-  <style>
-    body { font-family: Arial,sans-serif; margin:0; padding:0; background:#f9f9f9; }
-    header { background:#2e7d32; color:#fff; padding:15px; text-align:center; }
-    nav { background:#1b5e20; padding:10px; text-align:center; }
-    nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; }
-    nav a:hover { text-decoration:underline; }
-    .hero { background:url("https://images.unsplash.com/photo-1505576399279-565b52d4ac51?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80") center/cover no-repeat; color:white; text-align:center; padding:100px 20px; }
-    .hero h1 { font-size:3em; margin:0; text-shadow:2px 2px 5px black; }
-    .hero p { font-size:1.2em; margin:10px 0; text-shadow:1px 1px 3px black; }
-    .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:40px; }
-    .product-card { background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:20px; text-align:center; }
-    .product-card img { max-width:100%; border-radius:10px; }
-    .product-card h3 { margin:10px 0; }
-    .product-card p { color:#555; }
-    .product-card button { background:#2e7d32; color:white; border:none; padding:10px 20px; margin-top:10px; cursor:pointer; border-radius:5px; }
-    .product-card button:hover { background:#1b5e20; }
-    footer { background:#2e7d32; color:white; text-align:center; padding:15px; margin-top:20px; }
+    <meta charset="UTF-8">
+    <title>VP OIL STORE | Pure & Premium Oils</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    /* Cart Modal CSS */
-    .cart-modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999; }
-    .cart-content { background:#fff; width:90%; max-width:400px; border-radius:10px; padding:20px; max-height:80%; overflow-y:auto; position:relative; }
-    .cart-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
-    .cart-header h3 { margin:0; }
-    .close-cart { cursor:pointer; font-size:20px; font-weight:bold; }
-    .cart-item { display:flex; gap:10px; align-items:center; margin-bottom:10px; border-bottom:1px dashed #ccc; padding-bottom:5px; }
-    .cart-item img { width:60px; height:40px; object-fit:cover; border-radius:5px; }
-    .cart-item-info { flex:1; }
-    .qty-controls { display:flex; align-items:center; gap:5px; margin-top:5px; }
-    .qty-controls button { padding:4px 8px; border:none; background:#2e7d32; color:white; border-radius:5px; cursor:pointer; }
-    .checkout-btn { width:100%; padding:10px; background:#2e7d32; color:white; border:none; border-radius:5px; cursor:pointer; margin-top:10px; font-weight:bold; }
-    .checkout-btn:hover { background:#1b5e20; }
-    /* Checkout Form */
-    #checkoutForm input,#checkoutForm textarea{ width:100%; padding:6px; margin-bottom:8px; }
-    #placeOrder{ width:100%; padding:10px; background:#2e7d32; color:white; border:none; border-radius:5px; cursor:pointer; }
-    #placeOrder:hover{ background:#1b5e20; }
-  </style>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #2c5364;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: #2c5364;
+            color: white;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #0f2027;
+        }
+
+        footer {
+            background: #0f2027;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        footer p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
 </head>
+
 <body>
 
 <header>
-  <h1>VP OIL STORE</h1>
-  <p>Pure & Healthy Oils for Your Family</p>
-  <button id="openCartBtn" style="margin-top:10px;padding:8px 16px;border:none;background:#fbc02d;color:#000;border-radius:5px;cursor:pointer;">View Cart (<span id="cartCount">0</span>)</button>
+    <h1>VP OIL STORE</h1>
+    <p>Pure • Traditional • Premium Quality Oils</p>
 </header>
 
-<section class="hero">
-  <h1>Welcome to VP OIL STORE</h1>
-  <p>Buy Cold-Pressed & Organic Oils at Best Price</p>
+<section>
+    <h2 class="section-title">Our Products</h2>
+
+    <div class="products">
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1604908177522-4023d7d3e6f3" alt="Coconut Oil">
+            <h3>Coconut Oil</h3>
+            <p>Cold pressed pure coconut oil for healthy living.</p>
+            <a href="‪" class="btn">Order Now</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1615485925600-97237e1c3a40" alt="Sesame Oil">
+            <h3>Sesame Oil</h3>
+            <p>Traditional gingelly oil with rich aroma.</p>
+            <a href="" class="btn">Order Now</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1604908554105-0886459a1b9c" alt="Peanut Oil">
+            <h3>Peanut Oil</h3>
+            <p>Pure groundnut oil for tasty cooking.</p>
+            <a href="#" class="btn">Order Now</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1611078489935-0cb964de46c4" alt="Sunflower Oil">
+            <h3>Sunflower Oil</h3>
+            <p>Light & healthy sunflower cooking oil.</p>
+            <a href="#" class="btn">Order Now</a>
+        </div>
+
+    </div>
 </section>
 
-<section class="products" id="productsGrid"></section>
-
 <footer>
-  <p>© 2025 VP OIL STORE | All Rights Reserved</p>
+    <p>© 2026 VP OIL STORE | Natural & Trusted Oils</p>
 </footer>
-
-<!-- Cart Modal -->
-<div class="cart-modal" id="cartModal">
-  <div class="cart-content">
-    <div class="cart-header">
-      <h3>Your Cart</h3>
-      <span class="close-cart" id="closeCart">&times;</span>
-    </div>
-    <div id="cartItems"></div>
-    <p style="text-align:right;margin-top:10px;">Subtotal: ₹<span id="subtotal">0</span></p>
-    <button class="checkout-btn" id="checkoutBtn">Checkout</button>
-
-    <!-- Checkout Form -->
-    <div id="checkoutForm" style="display:none; margin-top:15px;">
-      <input type="text" id="cname" placeholder="Name">
-      <input type="text" id="cphone" placeholder="Phone">
-      <textarea id="caddress" placeholder="Address"></textarea>
-      <button id="placeOrder">Pay & Place Order</button>
-    </div>
-  </div>
-</div>
-
-<!-- Razorpay script -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-<script type="module">
-  // --- Firebase ---
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, Timestamp, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAnX8Wgowd6urw5mjKcjrispl2zN8UXYLI",
-    authDomain: "vp-store-f8b5c.firebaseapp.com",
-    projectId: "vp-store-f8b5c",
-    storageBucket: "vp-store-f8b5c.appspot.com",
-    messagingSenderId: "704966593843",
-    appId: "1:704966593843:web:f9de54b7cf6e2398ba8246",
-    measurementId: "G-77LW885P2S"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  async function saveOrderToFirebase(order){
-    try {
-      const docRef = await addDoc(collection(db,"orders"), {...order, createdAt: Timestamp.now()});
-      return docRef.id;
-    } catch(e){ console.error("Error:", e); return null; }
-  }
-
-  async function updateOrderStatus(orderId,status){
-    try{
-      const orderRef = doc(db,"orders",orderId);
-      await updateDoc(orderRef,{status});
-    } catch(e){ console.error("Error updating:", e);}
-  }
-
-  // --- Products & Cart ---
-    const products = [
-      {id:'p1', name:'Sesame oil - 1L', price:150, img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbCgurU90HSjJl2qu6KW8XPtOC6GeqixAnJA&s'},
-      {id:'p2', name:'Groundnut Oil - 1L', price:200, img:'https://t3.ftcdn.net/jpg/01/76/69/72/360_F_176697286_Ru2971MsTRsdLpTgu9yal7aK3NwkEz0V.jpg'},
-      {id:'p3', name:'Coconut Oil - 1L', price:180, img:'https://media.istockphoto.com/id/151534987/photo/coconut-oil-bottle-in-front-of-a-brown-coconut.jpg?s=612x612&w=0&k=20&c=50TqbpDR5qweUvgxBojFsh-qo_Ft-xWBSfM-tva2f9c='}
-    ];
-  
-  let cart=[];
-
-  const productsGrid = document.getElementById('productsGrid');
-  const cartModal = document.getElementById('cartModal');
-  const openCartBtn = document.getElementById('openCartBtn');
-  const closeCart = document.getElementById('closeCart');
-  const cartItemsEl = document.getElementById('cartItems');
-  const subtotalEl = document.getElementById('subtotal');
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  const cartCount = document.getElementById('cartCount');
-
-  const checkoutForm = document.getElementById('checkoutForm');
-  const placeOrderBtn = document.getElementById('placeOrder');
-  const cname = document.getElementById('cname');
-  const cphone = document.getElementById('cphone');
-  const caddress = document.getElementById('caddress');
-
-  function renderProducts(){
-    productsGrid.innerHTML = products.map(p=>`
-      <div class="product-card">
-        <img src="${p.img}" alt="${p.name}">
-        <h3>${p.name}</h3>
-        <p>₹${p.price}</p>
-        <button onclick="addToCart('${p.id}')">Add to Cart</button>
-      </div>
-    `).join('');
-  }
-
-  function addToCart(id){
-    const prod = products.find(p=>p.id===id);
-    const found = cart.find(c=>c.id===id);
-    if(found) found.qty+=1;
-    else cart.push({...prod, qty:1});
-    renderCart();
-  }
-
-  function renderCart(){
-    if(cart.length===0){
-      cartItemsEl.innerHTML = '<p>Your cart is empty.</p>';
-    } else {
-      cartItemsEl.innerHTML = cart.map(item=>`
-        <div class="cart-item">
-          <img src="${item.img}" alt="${item.name}">
-          <div class="cart-item-info">
-            <strong>${item.name}</strong><br>₹${item.price} x ${item.qty}
-            <div class="qty-controls">
-              <button onclick="decreaseQty('${item.id}')">-</button>
-              <span>${item.qty}</span>
-              <button onclick="increaseQty('${item.id}')">+</button>
-              <button onclick="removeItem('${item.id}')" style="background:#d32f2f;">Remove</button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-    const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
-    subtotalEl.textContent=subtotal;
-    cartCount.textContent=cart.reduce((s,i)=>s+i.qty,0);
-  }
-
-  function increaseQty(id){ const item=cart.find(c=>c.id===id); if(item){item.qty++; renderCart();}}
-  function decreaseQty(id){ const item=cart.find(c=>c.id===id); if(item){item.qty--; if(item.qty<=0) removeItem(id); else renderCart();}}
-  function removeItem(id){ cart=cart.filter(c=>c.id!==id); renderCart();}
-
-  openCartBtn.addEventListener('click',()=>{cartModal.style.display='flex';});
-  closeCart.addEventListener('click',()=>{cartModal.style.display='none';});
-  window.addEventListener('click',(e)=>{if(e.target===cartModal) cartModal.style.display='none';});
-
-  checkoutBtn.addEventListener('click', ()=>{if(cart.length===0){alert('Cart empty'); return;} checkoutForm.style.display=checkoutForm.style.display==='block'?'none':'block';});
-
-  placeOrderBtn.addEventListener('click', async ()=>{
-    const name=cname.value.trim(), phone=cphone.value.trim(), address=caddress.value.trim();
-    if(!name||!phone||!address){ alert('Fill all fields'); return; }
-
-    const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
-    const orderData = { items: cart, customer:{name,phone,address}, subtotal, status:'pending' };
-    const orderId = await saveOrderToFirebase(orderData);
-    if(!orderId){ alert('Error saving order'); return; }
-
-    // Razorpay Payment
-    const options = {
-      key: "YOUR_RAZORPAY_KEY", // Replace with your Razorpay Key
-      amount: subtotal*100,
-      currency: "INR",
-      name: "VP OIL STORE",
-      description: `Order ID: ${orderId}`,
-      handler: async function(response){
-        alert(`Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
-        await updateOrderStatus(orderId,'paid');
-        cart=[]; renderCart(); checkoutForm.style.display='none'; cartModal.style.display='none';
-        cname.value=cphone.value=caddress.value='';
-      },
-      prefill: {name, contact:phone},
-      theme: {color:"#2e7d32"}
-    };
-    const rzp = new Razorpay(options);
-    rzp.open();
-  });
-
-  renderProducts();
-  renderCart();
-</script>
 
 </body>
 </html>
