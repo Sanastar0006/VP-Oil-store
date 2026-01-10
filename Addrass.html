@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VP OIL STORE | Order Address</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    background:#fff;
+    width:95%;
+    max-width:600px;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.25);
+}
+
+h1{
+    text-align:center;
+    color:#2c5364;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    text-align:center;
+    font-size:14px;
+    color:#666;
+    margin-bottom:25px;
+}
+
+.btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:30px;
+    font-size:15px;
+    cursor:pointer;
+    background:#2c5364;
+    color:white;
+    margin-bottom:15px;
+    transition:0.3s;
+}
+.btn:hover{background:#0f2027}
+
+input,textarea{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+textarea{resize:none;height:80px}
+
+.info{
+    font-size:13px;
+    color:#444;
+    background:#f1f5f8;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+.footer{
+    text-align:center;
+    font-size:12px;
+    color:#888;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>VP OIL STORE</h1>
+<p class="subtitle">Luxury Delivery Address Portal</p>
+
+<button class="btn" onclick="getLocation()">📍 Use Live Location</button>
+
+<div class="info" id="locationInfo">Location not selected</div>
+
+<input type="text" id="pincode" placeholder="Enter Pincode" onblur="getPincodeDetails()">
+
+<div class="row">
+    <input type="text" id="district" placeholder="District">
+    <input type="text" id="state" placeholder="State">
+</div>
+
+<input type="text" id="area" placeholder="Area / Locality">
+
+<textarea id="address" placeholder="House No, Street, Landmark"></textarea>
+
+<button class="btn">✅ Confirm Order</button>
+
+<div class="footer">
+© 2026 VP OIL STORE | Pure & Premium Oils
+</div>
+</div>
+
+<script>
+// LIVE LOCATION
+function getLocation(){
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(showPosition,showError);
+    }else{
+        alert("Geolocation not supported");
+    }
+}
+
+function showPosition(position){
+    document.getElementById("locationInfo").innerHTML =
+    "Latitude: " + position.coords.latitude +
+    "<br>Longitude: " + position.coords.longitude +
+    "<br><b>Location detected successfully</b>";
+}
+
+function showError(error){
+    alert("Location permission denied");
+}
+
+// PINCODE LOOKUP (India Post API)
+function getPincodeDetails(){
+    let pin = document.getElementById("pincode").value;
+    if(pin.length !== 6) return;
+
+    fetch("https://api.postalpincode.in/pincode/" + pin)
+    .then(res => res.json())
+    .then(data => {
+        if(data[0].Status === "Success"){
+            let post = data[0].PostOffice[0];
+            document.getElementById("district").value = post.District;
+            document.getElementById("state").value = post.State;
+            document.getElementById("area").value = post.Name;
+        }else{
+            alert("Invalid Pincode");
+        }
+    });
+}
+</script>
+
+</body>
+</html>
