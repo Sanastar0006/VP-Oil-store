@@ -146,7 +146,7 @@ textarea{resize:none;height:80px}
 
 <textarea id="address" placeholder="House No, Street, Landmark"></textarea>
 
-<button class="btn">✅ Confirm Order</button>
+<button class="btn" onclick="confirmOrder()">✅ Confirm Order</button>
 <button class="btn" onclick="sendWhatsApp()">📲 Order via WhatsApp</button>
     
     <div class="info">
@@ -181,7 +181,10 @@ const prices = {
 };
 function calculatePrice(){
     const qty = parseFloat(document.getElementById("quantity").value);
-    if(!product || !qty) return;
+    if(!product || !qty){
+        document.getElementById("price").value = "";
+        return;
+    }
 
     let subTotal = prices[product] * qty;
 
@@ -193,12 +196,16 @@ function calculatePrice(){
 
     let finalAmount = subTotal + deliveryCharge - discount;
 
-    document.getElementById("subTotal").innerText = "₹ " + subTotal;
-    document.getElementById("delivery").innerText = "₹ " + deliveryCharge;
+    // ✅ UPDATE ALL FIELDS
+    document.getElementById("price").value = "₹ " + subTotal.toFixed(0);
+    document.getElementById("subTotal").innerText = "₹ " + subTotal.toFixed(0);
+    document.getElementById("delivery").innerText = "₹ " + deliveryCharge.toFixed(0);
     document.getElementById("discount").innerText = "- ₹ " + discount.toFixed(0);
     document.getElementById("finalAmount").innerText = "₹ " + finalAmount.toFixed(0);
-}
 
+    // SAVE FINAL AMOUNT FOR PAYMENT
+    window.finalPayAmount = finalAmount.toFixed(0);
+}
 // LIVE LOCATION
 function getLocation(){
     if(navigator.geolocation){
@@ -275,11 +282,18 @@ Address: ${address}`;
     const phone = "916374693930"; // your WhatsApp number
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
 }    
-    
+function confirmOrder(){
+    if(!window.finalPayAmount){
+        alert("Please select quantity first ❗");
+        return;
+    }
+    alert("Order confirmed successfully ✅\nPayable Amount: ₹ " + window.finalPayAmount);
+}    
 </script>
 
 </body>
 </html>
+
 
 
 
