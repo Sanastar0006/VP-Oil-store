@@ -127,7 +127,8 @@ textarea{resize:none;height:80px}
     <hr>
     <p style="font-size:16px;">💰 Payable Amount : <b id="finalAmount">₹ 0</b></p>
 </div>
-   
+   <input type="text" id="coupon" placeholder="Enter Coupon Code">
+<button class="btn" onclick="applyCoupon()">Apply Coupon</button>
 <p class="subtitle">Luxury Delivery Address Portal</p>
 
 <button class="btn" onclick="getLocation()">📍 Use Live Location</button>
@@ -146,6 +147,15 @@ textarea{resize:none;height:80px}
 <textarea id="address" placeholder="House No, Street, Landmark"></textarea>
 
 <button class="btn">✅ Confirm Order</button>
+<button class="btn" onclick="sendWhatsApp()">📲 Order via WhatsApp</button>
+    
+    <div class="info">
+    <p>💳 Pay via UPI</p>
+    <a class="btn" href="upi://pay?pa=yourupi@bank&pn=VP OIL STORE&cu=INR">
+        Pay Now
+    </a>
+</div>
+
 
 <div class="footer">
 © 2026 VP OIL STORE | Pure & Premium Oils
@@ -169,30 +179,26 @@ const prices = {
     "Peanut Oil": 420,
     "Sunflower Oil": 350
 };
-
 function calculatePrice(){
     const qty = parseFloat(document.getElementById("quantity").value);
     if(!product || !qty) return;
 
-    // SUB TOTAL
-    const subTotal = prices[product] * qty;
+    let subTotal = prices[product] * qty;
 
-    // DELIVERY CHARGE
     let deliveryCharge = subTotal < 500 ? 50 : 0;
+    if(freeDelivery) deliveryCharge = 0;
 
-    // DISCOUNT
     let discount = subTotal >= 1000 ? subTotal * 0.10 : 0;
+    discount += subTotal * couponDiscount;
 
-    // FINAL AMOUNT
-    const finalAmount = subTotal + deliveryCharge - discount;
+    let finalAmount = subTotal + deliveryCharge - discount;
 
-    // DISPLAY
-    document.getElementById("price").value = "₹ " + subTotal.toFixed(0);
-    document.getElementById("subTotal").innerText = "₹ " + subTotal.toFixed(0);
-    document.getElementById("delivery").innerText = "₹ " + deliveryCharge.toFixed(0);
+    document.getElementById("subTotal").innerText = "₹ " + subTotal;
+    document.getElementById("delivery").innerText = "₹ " + deliveryCharge;
     document.getElementById("discount").innerText = "- ₹ " + discount.toFixed(0);
     document.getElementById("finalAmount").innerText = "₹ " + finalAmount.toFixed(0);
 }
+
 // LIVE LOCATION
 function getLocation(){
     if(navigator.geolocation){
@@ -231,10 +237,50 @@ function getPincodeDetails(){
         }
     });
 }
+    
+let couponDiscount = 0;
+let freeDelivery = false;
+
+function applyCoupon(){
+    const code = document.getElementById("coupon").value.toUpperCase();
+
+    couponDiscount = 0;
+    freeDelivery = false;
+
+    if(code === "VP10"){
+        couponDiscount = 0.10;
+        alert("10% Discount Applied 🎉");
+    }
+    else if(code === "FREEDEL"){
+        freeDelivery = true;
+        alert("Free Delivery Applied 🚚");
+    }
+    else{
+        alert("Invalid Coupon ❌");
+    }
+    calculatePrice();
+}
+function sendWhatsApp(){
+    const qty = document.getElementById("quantity").value;
+    const amount = document.getElementById("finalAmount").innerText;
+    const address = document.getElementById("address").value;
+
+    const msg = 
+`🛒 VP OIL STORE ORDER
+Product: ${product}
+Quantity: ${qty}
+Amount: ${amount}
+Address: ${address}`;
+
+    const phone = "916374693930"; // your WhatsApp number
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
+}    
+    
 </script>
 
 </body>
 </html>
+
 
 
 
