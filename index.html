@@ -96,8 +96,25 @@ h1{text-align:center;letter-spacing:2px;}
 </div>
 
 </div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <script>
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "vp-oil-store.firebaseapp.com",
+  projectId: "vp-oil-store",
+};
 
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+const auth = firebase.auth();
+</script>
+    
 </body>
 </html>
+
 
 
