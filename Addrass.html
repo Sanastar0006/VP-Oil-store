@@ -184,7 +184,8 @@ function calculatePrice(){
         document.getElementById("price").value = "";
         return;
     }
-
+    let couponDiscount = 0;
+    let freeDelivery = false;
     let subTotal = prices[product] * qty;
 
     let deliveryCharge = subTotal < 500 ? 50 : 0;
@@ -310,6 +311,7 @@ function payNow(){
 
 </body>
 </html>
+
 
 
 
