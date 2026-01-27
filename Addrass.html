@@ -151,9 +151,8 @@ textarea{resize:none;height:80px}
     
     <div class="info">
     <p>💳 Pay via UPI</p>
-    <a class="btn" href="upi://pay?pa=yourupi@bank&pn=VP OIL STORE&cu=INR">
-        Pay Now
-    </a>
+    <button class="btn" onclick="payNow()">💳 Pay Now</button>
+       </a>
 </div>
 
 
@@ -289,10 +288,29 @@ function confirmOrder(){
     }
     alert("Order confirmed successfully ✅\nPayable Amount: ₹ " + window.finalPayAmount);
 }    
+    
+function payNow(){
+    if(!window.finalPayAmount){
+        alert("Please select quantity first ❗");
+        return;
+    }
+
+    const upiId = "sanmuga0006@oksbi"; // ✅ YOUR REAL UPI
+    const name = "VP OIL STORE";
+    const amount = window.finalPayAmount;
+
+    const upiURL =
+        `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+
+    // MOBILE LA UPI OPEN AAGUM
+    window.location.href = upiURL;
+}
+    
 </script>
 
 </body>
 </html>
+
 
 
 
