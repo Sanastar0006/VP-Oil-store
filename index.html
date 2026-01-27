@@ -2,80 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>VP OIL STORE | Pure & Premium Oils</title>
+<title>VP OIL STORE – Pure Luxury Oils</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;font-family:'Poppins',sans-serif;background:#f9f9f9;color:#333;}
-header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:white;padding:60px 20px;text-align:center;}
-header h1{font-size:48px;margin-bottom:10px;}
-header p{font-size:18px;opacity:0.9;}
-section{padding:60px 20px;max-width:1200px;margin:auto;}
-.section-title{text-align:center;font-size:36px;margin-bottom:40px;color:#2c5364;}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;}
-.card{background:white;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding:25px;text-align:center;transition:0.3s;}
-.card:hover{transform:translateY(-10px);}
-.card img{width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:15px;}
-.card h3{font-size:22px;margin-bottom:10px;}
-.card p{font-size:15px;color:#666;margin-bottom:20px;}
-.btn{display:inline-block;padding:10px 25px;background:#2c5364;color:white;border-radius:25px;text-decoration:none;}
-.btn:hover{background:#0f2027;}
-footer{background:#0f2027;color:white;text-align:center;padding:30px;margin-top:60px;}
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+    padding:30px;
+    color:#fff;
+}
+h1{
+    text-align:center;
+    margin-bottom:10px;
+    letter-spacing:2px;
+}
+.subtitle{
+    text-align:center;
+    opacity:0.8;
+    margin-bottom:40px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:30px;
+}
+
+.card{
+    backdrop-filter: blur(12px);
+    background:rgba(255,255,255,0.12);
+    border-radius:22px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 25px 50px rgba(0,0,0,0.35);
+    transition:0.4s;
+}
+.card:hover{
+    transform:translateY(-10px) scale(1.02);
+    box-shadow:0 40px 80px rgba(0,0,0,0.45);
+}
+
+.card img{
+    width:100%;
+    height:260px;
+    object-fit:contain;
+    border-radius:15px;
+}
+
+.card h3{
+    margin:15px 0 5px;
+    font-weight:600;
+    letter-spacing:1px;
+}
+
+.badge{
+    font-size:12px;
+    background:gold;
+    color:#000;
+    padding:4px 10px;
+    border-radius:20px;
+    display:inline-block;
+    margin-bottom:10px;
+}
+
+.btn{
+    display:inline-block;
+    margin-top:15px;
+    padding:12px 26px;
+    border-radius:30px;
+    text-decoration:none;
+    background:linear-gradient(135deg,#ffd89b,#19547b);
+    color:#000;
+    font-weight:600;
+    transition:0.3s;
+}
+.btn:hover{
+    transform:scale(1.08);
+}
+.footer{
+    text-align:center;
+    margin-top:40px;
+    font-size:12px;
+    opacity:0.6;
+}
 </style>
 </head>
 
 <body>
 
-<header>
 <h1>VP OIL STORE</h1>
-<p>Pure • Traditional • Premium Quality Oils</p>
-</header>
+<p class="subtitle">Pure • Cold Pressed • Luxury Oils</p>
 
-<section>
-<h2 class="section-title">Our Products</h2>
+<div class="grid" id="productGrid"></div>
 
-<div class="products">
-
-<div class="card">
-<img src="https://www.dreamstime.com/coconut-oil-glass-jar-fresh-coconuts-palm-leaves-beautiful-arrangement-featuring-alongside-green-composition-image369139687">
-<h3>Coconut Oil</h3>
-<p>Cold pressed pure coconut oil.</p>
-<a href="Addrass.html?product=Coconut Oil" class="btn">Order Now</a>
+<div class="footer">
+© 2026 VP OIL STORE — Premium Quality Promise
 </div>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1615485925600-97237e1c3a40">
-<h3>Sesame Oil</h3>
-<p>Traditional gingelly oil.</p>
-<a href="Addrass.html?product=Sesame Oil" class="btn">Order Now</a>
-</div>
+<script>
+const images = [
+  "Sunflower oil.jpg.jpeg",
+  "Sesame oil.jpg.jpeg",
+  "Peanut oil.jpg.jpeg",
+  "Cocunutoil.jpg.jpeg"
+];
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1604908554105-0886459a1b9c">
-<h3>Peanut Oil</h3>
-<p>Pure groundnut oil.</p>
-<a href="Addrass.html?product=Peanut Oil" class="btn">Order Now</a>
-</div>
+function getProductName(file){
+    return file
+        .replace(".jpg.jpeg","")
+        .replace(/oil/i," Oil")
+        .replace(/_/g," ")
+        .trim();
+}
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1611078489935-0cb964de46c4">
-<h3>Sunflower Oil</h3>
-<p>Light & healthy oil.</p>
-<a href="Addrass.html?product=Sunflower Oil" class="btn">Order Now</a>
-</div>
+const grid = document.getElementById("productGrid");
 
-</div>
-</section>
+images.forEach(img=>{
+    const product = getProductName(img);
 
-<footer>
-<p>© 2026 VP OIL STORE</p>
-</footer>
+    grid.innerHTML += `
+    <div class="card">
+        <span class="badge">PREMIUM</span>
+        <img src="images/${img}">
+        <h3>${product}</h3>
+        <a class="btn" href="order.html?product=${encodeURIComponent(product)}">
+            Order Now
+        </a>
+    </div>`;
+});
+</script>
 
 </body>
 </html>
-
-
-
-
