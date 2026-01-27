@@ -2,77 +2,93 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>VP OIL STORE | Pure & Premium Oils</title>
+<title>VP OIL STORE – Premium Oils</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;font-family:'Poppins',sans-serif;background:#f9f9f9;color:#333;}
-header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:white;padding:60px 20px;text-align:center;}
-header h1{font-size:48px;margin-bottom:10px;}
-header p{font-size:18px;opacity:0.9;}
-section{padding:60px 20px;max-width:1200px;margin:auto;}
-.section-title{text-align:center;font-size:36px;margin-bottom:40px;color:#2c5364;}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;}
-.card{background:white;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding:25px;text-align:center;transition:0.3s;}
-.card:hover{transform:translateY(-10px);}
-.card img{width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:15px;}
-.card h3{font-size:22px;margin-bottom:10px;}
-.card p{font-size:15px;color:#666;margin-bottom:20px;}
-.btn{display:inline-block;padding:10px 25px;background:#2c5364;color:white;border-radius:25px;text-decoration:none;}
-.btn:hover{background:#0f2027;}
-footer{background:#0f2027;color:white;text-align:center;padding:30px;margin-top:60px;}
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+    padding:30px;
+    color:#fff;
+}
+h1{text-align:center;letter-spacing:2px;}
+.subtitle{text-align:center;opacity:0.8;margin-bottom:40px;}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+}
+
+.card{
+    background:rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px);
+    border-radius:22px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 25px 50px rgba(0,0,0,0.35);
+    transition:0.4s;
+}
+.card:hover{
+    transform:translateY(-10px) scale(1.03);
+}
+
+.card img{
+    width:100%;
+    height:240px;
+    object-fit:contain;
+}
+
+.btn{
+    display:inline-block;
+    margin-top:15px;
+    padding:12px 26px;
+    border-radius:30px;
+    background:linear-gradient(135deg,#ffd89b,#19547b);
+    color:#000;
+    font-weight:600;
+    text-decoration:none;
+}
 </style>
 </head>
 
 <body>
 
-<header>
 <h1>VP OIL STORE</h1>
-<p>Pure • Traditional • Premium Quality Oils</p>
-</header>
+<p class="subtitle">Pure • Cold Pressed • Luxury Oils</p>
 
-<section>
-<h2 class="section-title">Our Products</h2>
-
-<div class="products">
+<div class="grid">
 
 <div class="card">
-<img src="https://drive.google.com/file/d/1Kx3OdmCzSa234lle7fMo9a4tlsPbEAhh/view?usp=drive_link">
-<h3>Coconut Oil</h3>
-<p>Cold pressed pure coconut oil.</p>
-<a href="Addrass.html?product=Coconut Oil" class="btn">Order Now</a>
+<img src="images/sunflower.jpg">
+<h3>Sunflower Oil</h3>
+<a href="Addrass.html?product=Sunflower Oil" class="btn">Order Now</a>
 </div>
 
 <div class="card">
-<img src="https://images.unsplash.com/photo-1615485925600-97237e1c3a40">
+<img src="images/sesame.jpg">
 <h3>Sesame Oil</h3>
-<p>Traditional gingelly oil.</p>
 <a href="Addrass.html?product=Sesame Oil" class="btn">Order Now</a>
 </div>
 
 <div class="card">
-<img src="https://images.unsplash.com/photo-1604908554105-0886459a1b9c">
+<img src="images/peanut.jpg">
 <h3>Peanut Oil</h3>
-<p>Pure groundnut oil.</p>
 <a href="Addrass.html?product=Peanut Oil" class="btn">Order Now</a>
 </div>
 
 <div class="card">
-<img src="https://images.unsplash.com/photo-1611078489935-0cb964de46c4">
-<h3>Sunflower Oil</h3>
-<p>Light & healthy oil.</p>
-<a href="Addrass.html?product=Sunflower Oil" class="btn">Order Now</a>
+<img src="images/coconut.jpg">
+<h3>Coconut Oil</h3>
+<a href="Addrass.html?product=Coconut Oil" class="btn">Order Now</a>
 </div>
 
 </div>
-</section>
-
-<footer>
-<p>© 2026 VP OIL STORE</p>
-</footer>
 
 </body>
 </html>
-
