@@ -70,8 +70,28 @@ function updateStatus(index, value) {
   orders[index].status = value;
   localStorage.setItem("orders", JSON.stringify(orders));
 }
+let logged = localStorage.getItem("loggedUser");
+if(!logged){
+  window.location.href="login.html";
+}
+</script>
+
+<h2>📊 Admin Dashboard</h2>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+function logout(){
+  localStorage.removeItem("loggedUser");
+  window.location.href="login.html";
+}
+if(logged === "MASTER"){
+  document.write('<br><a href="add-user.html">➕ Add Admin User</a>');
+}
+  
 </script>
 
 </body>
 </html>
+
 
