@@ -1,345 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>VP OIL STORE | Order Address</title>
+<title>VP OIL STORE | Order</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
 <style>
-    select{
-    width:100%;
-    padding:12px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:14px;
-    margin-bottom:15px;
-    background:white;
-}
 body{
-    margin:0;
-    font-family:'Poppins',sans-serif;
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+font-family:Poppins,Arial;
+background:#0f2027;
+display:flex;
+justify-content:center;
 }
-
 .container{
-    background:#fff;
-    width:95%;
-    max-width:600px;
-    border-radius:20px;
-    padding:30px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.25);
+background:#fff;
+width:95%;
+max-width:600px;
+padding:25px;
+border-radius:20px;
+margin-top:20px;
 }
-
-h1{
-    text-align:center;
-    color:#2c5364;
-    margin-bottom:10px;
-}
-
-.subtitle{
-    text-align:center;
-    font-size:14px;
-    color:#666;
-    margin-bottom:25px;
-}
-
 .btn{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:30px;
-    font-size:15px;
-    cursor:pointer;
-    background:#2c5364;
-    color:white;
-    margin-bottom:15px;
-    transition:0.3s;
+width:100%;
+padding:12px;
+border:none;
+border-radius:25px;
+background:#2c5364;
+color:white;
+margin-top:10px;
+cursor:pointer;
 }
-.btn:hover{background:#0f2027}
-
-input,textarea{
-    width:100%;
-    padding:12px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:14px;
-    margin-bottom:15px;
+input,select,textarea{
+width:100%;
+padding:10px;
+margin-top:10px;
 }
-
-.row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-
-textarea{resize:none;height:80px}
-
-.info{
-    font-size:13px;
-    color:#444;
-    background:#f1f5f8;
-    padding:10px;
-    border-radius:10px;
-    margin-bottom:15px;
-}
-
-.footer{
-    text-align:center;
-    font-size:12px;
-    color:#888;
-    margin-top:10px;
-}
+.info{background:#f1f1f1;padding:10px;border-radius:10px;margin-top:10px;}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-<h1>VP OIL STORE</h1>
-    <div class="info" id="productName">
-🛒 Product : <b>Not Selected</b>
-</div>
-<div class="row">
-    <select id="quantity" onchange="calculatePrice()">
-    <option value="">Select Quantity</option>
-    <option value="0.2">200 grams</option>
-    <option value="0.3">300 grams</option>
-    <option value="0.5">500 grams</option>
-    <option value="1">1 Litre</option>
-    <option value="2">2 Litres</option>
-    <option value="3">3 Litres</option>
-    <option value="4">4 Litres</option>
-    <option value="5">5 Litres</option>
+
+<h2 id="productTitle">🛒 Product : Not Selected</h2>
+
+<select id="quantity" onchange="calculatePrice()">
+<option value="">Select Quantity</option>
+<option value="0.5">500 ml</option>
+<option value="1">1 Litre</option>
+<option value="2">2 Litres</option>
+<option value="5">5 Litres</option>
 </select>
 
-<input type="text" id="price" placeholder="Total Price (₹)" readonly>
-</div>
-    <div class="info">
-    <p>🧾 Sub Total : <b id="subTotal">₹ 0</b></p>
-    <p>🚚 Delivery Charge : <b id="delivery">₹ 0</b></p>
-    <p>🎉 Discount : <b id="discount">₹ 0</b></p>
-    <hr>
-    <p style="font-size:16px;">💰 Payable Amount : <b id="finalAmount">₹ 0</b></p>
-</div>
-   <input type="text" id="coupon" placeholder="Enter Coupon Code">
-<button class="btn" onclick="applyCoupon()">Apply Coupon</button>
-<p class="subtitle">Luxury Delivery Address Portal</p>
+<input id="price" readonly placeholder="Total Price">
 
-<button class="btn" onclick="getLocation()">📍 Use Live Location</button>
-
-<div class="info" id="locationInfo">Location not selected</div>
-
-<input type="text" id="pincode" placeholder="Enter Pincode" onblur="getPincodeDetails()">
-
-<div class="row">
-    <input type="text" id="district" placeholder="District">
-    <input type="text" id="state" placeholder="State">
+<div class="info">
+<p>Sub Total : <b id="sub">₹0</b></p>
+<p>Delivery : <b id="delivery">₹0</b></p>
+<p>Discount : <b id="discount">₹0</b></p>
+<hr>
+<p>Payable : <b id="final">₹0</b></p>
 </div>
 
-<input type="text" id="area" placeholder="Area / Locality">
-
-<textarea id="address" placeholder="House No, Street, Landmark"></textarea>
+<textarea id="address" placeholder="Enter Address"></textarea>
 
 <button class="btn" onclick="confirmOrder()">✅ Confirm Order</button>
 <button class="btn" onclick="sendWhatsApp()">📲 Order via WhatsApp</button>
-    
-    <div class="info">
-    <p>💳 Pay via UPI</p>
-    <button class="btn" onclick="payNow()">💳 Pay Now</button>
-       </a>
-</div>
+<button class="btn" onclick="payNow()">💳 Pay Now</button>
 
-
-<div class="footer">
-© 2026 VP OIL STORE | Pure & Premium Oils
-</div>
 </div>
 
 <script>
-// GET PRODUCT
+// PRODUCT FROM URL
 const params = new URLSearchParams(window.location.search);
 const product = params.get("product");
 
 if(product){
-    document.getElementById("productName").innerHTML =
-    "🛒 Product : <b>" + product + "</b>";
+document.getElementById("productTitle").innerHTML =
+"🛒 Product : <b>"+product+"</b>";
 }
 
-// PRICE PER LITRE
+// PRICE LIST
 const prices = {
-    "Coconut Oil": 480,
-    "Sesame Oil": 390,
-    "Peanut Oil": 220,
-    "Sunflower Oil": 350
+"Coconut Oil":480,
+"Sesame Oil":390,
+"Peanut Oil":220,
+"Sunflower Oil":350
 };
+
+let finalPayAmount = 0;
+
 function calculatePrice(){
-    const qty = parseFloat(document.getElementById("quantity").value);
-    if(!product || !qty){
-        document.getElementById("price").value = "";
-        return;
-    }
+const qty = Number(document.getElementById("quantity").value);
+if(!product || !qty) return;
 
-    let subTotal = prices[product] * qty;
+let sub = prices[product] * qty;
+let delivery = sub < 500 ? 50 : 0;
+let discount = sub >= 1000 ? sub * 0.1 : 0;
 
-    let deliveryCharge = subTotal < 500 ? 50 : 0;
-    if(freeDelivery) deliveryCharge = 0;
+finalPayAmount = sub + delivery - discount;
 
-    let discount = subTotal >= 1000 ? subTotal * 0.10 : 0;
-    discount += subTotal * couponDiscount;
-
-    let finalAmount = subTotal + deliveryCharge - discount;
-
-    // ✅ UPDATE ALL FIELDS
-    document.getElementById("price").value = "₹ " + subTotal.toFixed(0);
-    document.getElementById("subTotal").innerText = "₹ " + subTotal.toFixed(0);
-    document.getElementById("delivery").innerText = "₹ " + deliveryCharge.toFixed(0);
-    document.getElementById("discount").innerText = "- ₹ " + discount.toFixed(0);
-    document.getElementById("finalAmount").innerText = "₹ " + finalAmount.toFixed(0);
-
-    // SAVE FINAL AMOUNT FOR PAYMENT
-    window.finalPayAmount = finalAmount.toFixed(0);
-}
-// LIVE LOCATION
-function getLocation(){
-    if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(showPosition,showError);
-    }else{
-        alert("Geolocation not supported");
-    }
+document.getElementById("price").value = "₹"+sub;
+document.getElementById("sub").innerText = "₹"+sub;
+document.getElementById("delivery").innerText = "₹"+delivery;
+document.getElementById("discount").innerText = "₹"+discount;
+document.getElementById("final").innerText = "₹"+finalPayAmount;
 }
 
-function showPosition(position){
-    document.getElementById("locationInfo").innerHTML =
-    "Latitude: " + position.coords.latitude +
-    "<br>Longitude: " + position.coords.longitude +
-    "<br><b>Location detected successfully</b>";
-}
-
-function showError(error){
-    alert("Location permission denied");
-}
-
-// PINCODE LOOKUP (India Post API)
-function getPincodeDetails(){
-    let pin = document.getElementById("pincode").value;
-    if(pin.length !== 6) return;
-
-    fetch("https://api.postalpincode.in/pincode/" + pin)
-    .then(res => res.json())
-    .then(data => {
-        if(data[0].Status === "Success"){
-            let post = data[0].PostOffice[0];
-            document.getElementById("district").value = post.District;
-            document.getElementById("state").value = post.State;
-            document.getElementById("area").value = post.Name;
-        }else{
-            alert("Invalid Pincode");
-        }
-    });
-}
-    
-let couponDiscount = 0;
-let freeDelivery = false;
-
-function applyCoupon(){
-    const code = document.getElementById("coupon").value.toUpperCase();
-
-    couponDiscount = 0;
-    freeDelivery = false;
-
-    if(code === "VP10"){
-        couponDiscount = 0.10;
-        alert("10% Discount Applied 🎉");
-    }
-    else if(code === "FREEDEL"){
-        freeDelivery = true;
-        alert("Free Delivery Applied 🚚");
-    }
-    else{
-        alert("Invalid Coupon ❌");
-    }
-    calculatePrice();
-}
-function sendWhatsApp(){
-    const qty = document.getElementById("quantity").value;
-    const amount = document.getElementById("finalAmount").innerText;
-    const address = document.getElementById("address").value;
-
-    const msg = 
-`🛒 VP OIL STORE ORDER
-Product: ${product}
-Quantity: ${qty}
-Amount: ${amount}
-Address: ${address}`;
-
-    const phone = "916374693930"; // your WhatsApp number
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
-}    
 function confirmOrder(){
-    if(!window.finalPayAmount){
-        alert("Please select quantity first ❗");
-        return;
-    }
-    alert("Order confirmed successfully ✅\nPayable Amount: ₹ " + window.finalPayAmount);
-}    
-    
+if(!finalPayAmount){
+alert("Select Quantity ❗");
+return;
+}
+
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+orders.push({
+orderNo: orders.length+1,
+product: product,
+quantity: document.getElementById("quantity").value+" L",
+amount: finalPayAmount,
+status:"Being Delivered"
+});
+
+localStorage.setItem("orders",JSON.stringify(orders));
+
+alert("✅ Order Confirmed & Saved");
+}
+
+function sendWhatsApp(){
+if(!finalPayAmount){alert("Select quantity");return;}
+let msg =
+`VP OIL STORE ORDER
+Product: ${product}
+Amount: ₹${finalPayAmount}`;
+window.open("https://wa.me/916374693930?text="+encodeURIComponent(msg));
+}
+
 function payNow(){
-    if(!window.finalPayAmount){
-        alert("Select quantity before payment ❗");
-        return;
-    }
-
-    const upiId = "sanmuga0006@oksbi"; // CHANGE THIS
-    const name = "VP OIL STORE";
-    const amount = window.finalPayAmount;
-
-    const upiURL = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
-
-    window.location.href = upiURL;
+if(!finalPayAmount){alert("Select quantity");return;}
+let upi = `upi://pay?pa=sanmuga0006@oksbi&pn=VP OIL STORE&am=${finalPayAmount}&cu=INR`;
+window.location.href = upi;
 }
-
-
-  let orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-  let newOrder = {
-    orderNo: orders.length + 1,
-    product: product,
-    quantity: quantity + " L",
-    amount: amount,
-    status: "Being delivered"
-  };
-
-  orders.push(newOrder);
-  localStorage.setItem("orders", JSON.stringify(orders));
-
-  alert("✅ Order Confirmed & Saved to Dashboard");
-
-  // OPTIONAL: redirect to dashboard
-  window.location.href = "dashboard.html";
-}
-    
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
