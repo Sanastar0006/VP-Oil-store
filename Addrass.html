@@ -146,9 +146,7 @@ textarea{resize:none;height:80px}
 
 <textarea id="address" placeholder="House No, Street, Landmark"></textarea>
 
-<button onclick="confirmOrder()">
-Confirm Order
-</button>
+<button class="btn" onclick="confirmOrder()">✅ Confirm Order</button>
 <button class="btn" onclick="sendWhatsApp()">📲 Order via WhatsApp</button>
     
     <div class="info">
@@ -308,14 +306,26 @@ function payNow(){
     // MOBILE LA UPI OPEN AAGUM
     window.location.href = upiURL;
 }
-    function confirmOrder(product, quantity, amount) {
+function confirmOrder(){
+
+  const params = new URLSearchParams(window.location.search);
+  const product = params.get("product");
+
+  const quantity = document.getElementById("quantity").value;
+  const amountText = document.getElementById("finalAmount").innerText;
+  const amount = amountText.replace("₹","").trim();
+
+  if(!product || !quantity || amount == "0"){
+    alert("Please complete order details ❗");
+    return;
+  }
 
   let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
   let newOrder = {
     orderNo: orders.length + 1,
     product: product,
-    quantity: quantity,
+    quantity: quantity + " L",
     amount: amount,
     status: "Being delivered"
   };
@@ -323,12 +333,17 @@ function payNow(){
   orders.push(newOrder);
   localStorage.setItem("orders", JSON.stringify(orders));
 
-  alert("Order Confirmed Successfully!");
+  alert("✅ Order Confirmed & Saved to Dashboard");
+
+  // OPTIONAL: redirect to dashboard
+  window.location.href = "dashboard.html";
+}
     
 </script>
 
 </body>
 </html>
+
 
 
 
