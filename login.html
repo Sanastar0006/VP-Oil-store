@@ -11,6 +11,7 @@
 <input id="password" type="password" placeholder="Password"><br><br>
 
 <button onclick="login()">Login</button>
+  <button onclick="add-user()">Add User</button>
 
 <script>
 const MASTER_USER = "sanmuga0006vpoilstorefunder@gmail.com";
@@ -38,7 +39,11 @@ function login(){
     alert("❌ Invalid Username or Password");
   }
 }
+  if(logged === "MASTER"){
+  document.write('<br><a href="add-user.html">➕ Add Admin User</a>');
+}
 </script>
 
 </body>
 </html>
+
