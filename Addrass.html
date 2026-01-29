@@ -1,84 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>VP OIL STORE | Order</title>
+<title>VP OIL STORE | Order Address</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 body{
-font-family:Poppins,Arial;
-background:#0f2027;
+margin:0;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+min-height:100vh;
 display:flex;
 justify-content:center;
+align-items:center;
 }
 .container{
 background:#fff;
 width:95%;
 max-width:600px;
-padding:25px;
 border-radius:20px;
-margin-top:20px;
+padding:30px;
+box-shadow:0 20px 40px rgba(0,0,0,0.25);
 }
+h1{text-align:center;color:#2c5364;}
+.info{
+font-size:14px;
+background:#f1f5f8;
+padding:12px;
+border-radius:10px;
+margin-bottom:15px;
+}
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+input,textarea,select{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ccc;
+margin-bottom:15px;
+font-size:14px;
+}
+textarea{resize:none;height:80px}
 .btn{
 width:100%;
 padding:12px;
 border:none;
-border-radius:25px;
+border-radius:30px;
 background:#2c5364;
-color:white;
-margin-top:10px;
+color:#fff;
+font-size:15px;
 cursor:pointer;
+margin-bottom:12px;
 }
-input,select,textarea{
-width:100%;
-padding:10px;
-margin-top:10px;
-}
-.info{background:#f1f1f1;padding:10px;border-radius:10px;margin-top:10px;}
+.btn:hover{background:#0f2027}
+.footer{text-align:center;font-size:12px;color:#777;}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+<h1>VP OIL STORE</h1>
 
-<h2 id="productTitle">🛒 Product : Not Selected</h2>
+<div class="info" id="productName">🛒 Product : <b>Not Selected</b></div>
 
+<div class="row">
 <select id="quantity" onchange="calculatePrice()">
 <option value="">Select Quantity</option>
-<option value="0.5">500 ml</option>
+<option value="0.2">200 grams</option>
+<option value="0.3">300 grams</option>
+<option value="0.5">500 grams</option>
 <option value="1">1 Litre</option>
 <option value="2">2 Litres</option>
+<option value="3">3 Litres</option>
+<option value="4">4 Litres</option>
 <option value="5">5 Litres</option>
 </select>
-
-<input id="price" readonly placeholder="Total Price">
+<input id="price" readonly placeholder="Total Price ₹">
+</div>
 
 <div class="info">
-<p>Sub Total : <b id="sub">₹0</b></p>
+<p>Sub Total : <b id="subTotal">₹0</b></p>
 <p>Delivery : <b id="delivery">₹0</b></p>
 <p>Discount : <b id="discount">₹0</b></p>
 <hr>
-<p>Payable : <b id="final">₹0</b></p>
+<p><b>Payable : ₹<span id="finalAmount">0</span></b></p>
 </div>
 
-<textarea id="address" placeholder="Enter Address"></textarea>
+<input id="coupon" placeholder="Coupon Code">
+<button class="btn" onclick="applyCoupon()">Apply Coupon</button>
+
+<button class="btn" onclick="getLocation()">📍 Use Live Location</button>
+<div class="info" id="locationInfo">Location not selected</div>
+
+<input id="pincode" placeholder="Enter Pincode" onblur="getPincodeDetails()">
+
+<div class="row">
+<input id="district" placeholder="District">
+<input id="state" placeholder="State">
+</div>
+
+<input id="area" placeholder="Area">
+<textarea id="address" placeholder="House / Street / Landmark"></textarea>
 
 <button class="btn" onclick="confirmOrder()">✅ Confirm Order</button>
 <button class="btn" onclick="sendWhatsApp()">📲 Order via WhatsApp</button>
 <button class="btn" onclick="payNow()">💳 Pay Now</button>
 
+<div class="footer">© 2026 VP OIL STORE</div>
 </div>
 
 <script>
-// PRODUCT FROM URL
+// ---------- GLOBAL ----------
+let couponDiscount = 0;
+let freeDelivery = false;
+let finalPayAmount = 0;
+
+// PRODUCT
 const params = new URLSearchParams(window.location.search);
 const product = params.get("product");
 
 if(product){
-document.getElementById("productTitle").innerHTML =
-"🛒 Product : <b>"+product+"</b>";
+document.getElementById("productName").innerHTML =
+`🛒 Product : <b>${product}</b>`;
 }
 
 // PRICE LIST
@@ -89,59 +139,91 @@ const prices = {
 "Sunflower Oil":350
 };
 
-let finalPayAmount = 0;
-
+// PRICE CALC
 function calculatePrice(){
-const qty = Number(document.getElementById("quantity").value);
-if(!product || !qty) return;
+const qty = parseFloat(document.getElementById("quantity").value);
+if(!product || !qty){return;}
 
 let sub = prices[product] * qty;
 let delivery = sub < 500 ? 50 : 0;
-let discount = sub >= 1000 ? sub * 0.1 : 0;
+if(freeDelivery) delivery = 0;
 
+let discount = sub * couponDiscount;
 finalPayAmount = sub + delivery - discount;
 
-document.getElementById("price").value = "₹"+sub;
-document.getElementById("sub").innerText = "₹"+sub;
-document.getElementById("delivery").innerText = "₹"+delivery;
-document.getElementById("discount").innerText = "₹"+discount;
-document.getElementById("final").innerText = "₹"+finalPayAmount;
+document.getElementById("price").value = "₹" + sub;
+document.getElementById("subTotal").innerText = "₹" + sub;
+document.getElementById("delivery").innerText = "₹" + delivery;
+document.getElementById("discount").innerText = "-₹" + discount;
+document.getElementById("finalAmount").innerText = finalPayAmount;
 }
 
-function confirmOrder(){
-if(!finalPayAmount){
-alert("Select Quantity ❗");
-return;
+// COUPON
+function applyCoupon(){
+let c = document.getElementById("coupon").value.toUpperCase();
+couponDiscount = 0; freeDelivery=false;
+
+if(c==="VP10"){couponDiscount=0.10;alert("10% Discount 🎉");}
+else if(c==="FREEDEL"){freeDelivery=true;alert("Free Delivery 🚚");}
+else alert("Invalid Coupon ❌");
+
+calculatePrice();
 }
 
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-orders.push({
-orderNo: orders.length+1,
-product: product,
-quantity: document.getElementById("quantity").value+" L",
-amount: finalPayAmount,
-status:"Being Delivered"
+// LOCATION
+function getLocation(){
+navigator.geolocation.getCurrentPosition(pos=>{
+document.getElementById("locationInfo").innerHTML=
+`Lat:${pos.coords.latitude}<br>Lng:${pos.coords.longitude}`;
 });
+}
 
+// PINCODE
+function getPincodeDetails(){
+let pin=document.getElementById("pincode").value;
+if(pin.length!==6) return;
+fetch("https://api.postalpincode.in/pincode/"+pin)
+.then(r=>r.json()).then(d=>{
+if(d[0].Status==="Success"){
+let p=d[0].PostOffice[0];
+district.value=p.District;
+state.value=p.State;
+area.value=p.Name;
+}});
+}
+
+// CONFIRM ORDER
+function confirmOrder(){
+if(!finalPayAmount){alert("Select quantity ❗");return;}
+
+let orders=JSON.parse(localStorage.getItem("orders"))||[];
+orders.push({
+orderNo:orders.length+1,
+product,
+quantity:quantity.value+" L",
+amount:finalPayAmount,
+status:"Being delivered"
+});
 localStorage.setItem("orders",JSON.stringify(orders));
 
-alert("✅ Order Confirmed & Saved");
+alert("✅ Order Confirmed Successfully");
 }
 
+// WHATSAPP
 function sendWhatsApp(){
-if(!finalPayAmount){alert("Select quantity");return;}
-let msg =
-`VP OIL STORE ORDER
-Product: ${product}
-Amount: ₹${finalPayAmount}`;
+if(!finalPayAmount){alert("Select quantity ❗");return;}
+let msg=`VP OIL STORE
+Product:${product}
+Qty:${quantity.value}
+Amount:₹${finalPayAmount}
+Address:${address.value}`;
 window.open("https://wa.me/916374693930?text="+encodeURIComponent(msg));
 }
 
+// PAY
 function payNow(){
-if(!finalPayAmount){alert("Select quantity");return;}
-let upi = `upi://pay?pa=sanmuga0006@oksbi&pn=VP OIL STORE&am=${finalPayAmount}&cu=INR`;
-window.location.href = upi;
+if(!finalPayAmount){alert("Select quantity ❗");return;}
+location.href=`upi://pay?pa=sanmuga0006@oksbi&pn=VP OIL STORE&am=${finalPayAmount}&cu=INR`;
 }
 </script>
 
