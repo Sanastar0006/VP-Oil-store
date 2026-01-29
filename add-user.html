@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Admin User</title>
+</head>
+<body>
+
+<h2>➕ Add Admin User</h2>
+
+<input id="newUser" placeholder="New Username"><br><br>
+<input id="newPass" placeholder="New Password"><br><br>
+
+<button onclick="addUser()">Create User</button>
+
+<script>
+if(localStorage.getItem("loggedUser") !== "MASTER"){
+  alert("❌ Access Denied");
+  window.location.href = "login.html";
+}
+
+function addUser(){
+  let u = document.getElementById("newUser").value;
+  let p = document.getElementById("newPass").value;
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  users.push({username:u,password:p});
+  localStorage.setItem("users",JSON.stringify(users));
+
+  alert("✅ User Created Successfully");
+}
+</script>
+
+</body>
+</html>

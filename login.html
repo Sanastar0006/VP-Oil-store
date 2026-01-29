@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Login</title>
+</head>
+<body>
+
+<h2>🔐 Admin Login</h2>
+
+<input id="username" placeholder="Username"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+
+<script>
+const MASTER_USER = "sanmuga0006vpoilstorefunder@gmail.com";
+const MASTER_PASS = "VP@admin2025";
+
+function login(){
+  let u = document.getElementById("username").value;
+  let p = document.getElementById("password").value;
+
+  // MASTER LOGIN
+  if(u === MASTER_USER && p === MASTER_PASS){
+    localStorage.setItem("loggedUser","MASTER");
+    window.location.href = "dashboard.html";
+    return;
+  }
+
+  // NORMAL USERS
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let valid = users.find(x => x.username === u && x.password === p);
+
+  if(valid){
+    localStorage.setItem("loggedUser", u);
+    window.location.href = "dashboard.html";
+  }else{
+    alert("❌ Invalid Username or Password");
+  }
+}
+</script>
+
+</body>
+</html>
