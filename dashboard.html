@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VP Oil Store – Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background: #111;
+      color: white;
+    }
+    select {
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>📊 VP Oil Store – Orders Dashboard</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Order No</th>
+      <th>Product Name</th>
+      <th>Quantity</th>
+      <th>Amount (₹)</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody id="orderTable"></tbody>
+</table>
+
+<script>
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+let table = document.getElementById("orderTable");
+
+orders.forEach((o, index) => {
+  table.innerHTML += `
+    <tr>
+      <td>${o.orderNo}</td>
+      <td>${o.product}</td>
+      <td>${o.quantity}</td>
+      <td>${o.amount}</td>
+      <td>
+        <select onchange="updateStatus(${index}, this.value)">
+          <option ${o.status=="Being delivered"?"selected":""}>Being delivered</option>
+          <option ${o.status=="Delivered"?"selected":""}>Delivered</option>
+          <option ${o.status=="Cancelled"?"selected":""}>Cancelled</option>
+        </select>
+      </td>
+    </tr>
+  `;
+});
+
+function updateStatus(index, value) {
+  orders[index].status = value;
+  localStorage.setItem("orders", JSON.stringify(orders));
+}
+</script>
+
+</body>
+</html>
