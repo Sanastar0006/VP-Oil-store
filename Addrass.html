@@ -146,7 +146,9 @@ textarea{resize:none;height:80px}
 
 <textarea id="address" placeholder="House No, Street, Landmark"></textarea>
 
-<button class="btn" onclick="confirmOrder()">✅ Confirm Order</button>
+<button onclick="confirmOrder('Peanut Oil','1 Liter',220)">
+Confirm Order
+</button>
 <button class="btn" onclick="sendWhatsApp()">📲 Order via WhatsApp</button>
     
     <div class="info">
@@ -306,11 +308,28 @@ function payNow(){
     // MOBILE LA UPI OPEN AAGUM
     window.location.href = upiURL;
 }
+    function confirmOrder(product, quantity, amount) {
+
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+  let newOrder = {
+    orderNo: orders.length + 1,
+    product: product,
+    quantity: quantity,
+    amount: amount,
+    status: "Being delivered"
+  };
+
+  orders.push(newOrder);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  alert("Order Confirmed Successfully!");
     
 </script>
 
 </body>
 </html>
+
 
 
 
