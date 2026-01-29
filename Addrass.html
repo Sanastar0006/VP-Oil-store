@@ -184,8 +184,7 @@ function calculatePrice(){
         document.getElementById("price").value = "";
         return;
     }
-    let couponDiscount = 0;
-    let freeDelivery = false;
+
     let subTotal = prices[product] * qty;
 
     let deliveryCharge = subTotal < 500 ? 50 : 0;
@@ -292,33 +291,19 @@ function confirmOrder(){
     
 function payNow(){
     if(!window.finalPayAmount){
-        alert("Please select quantity first ❗");
+        alert("Select quantity before payment ❗");
         return;
     }
 
-    const upiId = "sanmuga0006@oksbi"; // ✅ YOUR REAL UPI
+    const upiId = "sanmuga0006@oksbi"; // CHANGE THIS
     const name = "VP OIL STORE";
     const amount = window.finalPayAmount;
 
-    const upiURL =
-        `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+    const upiURL = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
 
-    // MOBILE LA UPI OPEN AAGUM
     window.location.href = upiURL;
 }
-function confirmOrder(){
 
-  const params = new URLSearchParams(window.location.search);
-  const product = params.get("product");
-
-  const quantity = document.getElementById("quantity").value;
-  const amountText = document.getElementById("finalAmount").innerText;
-  const amount = amountText.replace("₹","").trim();
-
-  if(!product || !quantity || amount == "0"){
-    alert("Please complete order details ❗");
-    return;
-  }
 
   let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
@@ -343,6 +328,7 @@ function confirmOrder(){
 
 </body>
 </html>
+
 
 
 
